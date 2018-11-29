@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Symfony blog{% endblock %}
+
+{% block body %}
+    {% if blogposts %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Blog Title</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody> 
+                {% for post in blogposts %}
+                    <tr>
+                        <td>{{ post }}</td>
+                        <td>
+                            <a href="/post/1" class="btn btn-dark">Show</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>    
+        </table>
+    {% else %}
+        <p>No blogposts to display</p>
+    {% endif %}
+{% endblock %}
