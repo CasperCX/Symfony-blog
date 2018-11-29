@@ -25,21 +25,21 @@ class BlogPost
         /**
          * @var string
          * 
-         * @ORM\Column(name="title", type="string", length=255)
+         * @ORM\Column(name="title", type="string", length=191)
          */
     private $title;
 
         /**
          * @var string
          * 
-         * @ORM\Column(name="slug", type="string", length=255, unique=true)
+         * @ORM\Column(name="slug", type="string", length=191, unique=true)
          */
     private $slug;
 
         /**
          * @var string
          * 
-         * @ORM\Column(name="description", type="string", length=2000)
+         * @ORM\Column(name="description", type="string", length=500)
          */
     private $description;
 

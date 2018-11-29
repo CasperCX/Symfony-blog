@@ -25,63 +25,63 @@ class Author
         /**
          * @var string
          *
-         * @ORM\Column(name="name", type="string", length=255, unique=true)
+         * @ORM\Column(name="name", type="string", length=191, unique=true)
          */
     private $name;
 
         /**
          * @var string
          *
-         * @ORM\Column(name="title", type="string", length=255)
+         * @ORM\Column(name="title", type="string", length=191)
          */
     private $title;
 
         /**
          * @var string
          *
-         * @ORM\Column(name="username", type="string", length=255, unique=true)
+         * @ORM\Column(name="username", type="string", length=191, unique=true)
          */
     private $username;
 
         /**
          * @var string
          *
-         * @ORM\Column(name="company", type="string", length=255)
+         * @ORM\Column(name="company", type="string", length=191)
          */
     private $company;
 
         /**
          * @var string
          *
-         * @ORM\Column(name="short_bio", type="string", length=500)
+         * @ORM\Column(name="short_bio", type="string", length=191)
          */
     private $shortBio;
 
         /**
          * @var string
          *
-         * @ORM\Column(name="phone", type="string", length=255, nullable=true)
+         * @ORM\Column(name="phone", type="string", length=250, nullable=true)
          */
     private $phone;
 
         /**
          * @var string
          *
-         * @ORM\Column(name="facebook", type="string", length=255, nullable=true)
+         * @ORM\Column(name="facebook", type="string", length=191, nullable=true)
          */
     private $facebook;
 
         /**
          * @var string
          *
-         * @ORM\Column(name="twitter", type="string", length=255, nullable=true)
+         * @ORM\Column(name="twitter", type="string", length=191, nullable=true)
          */
     private $twitter;
 
         /**
          * @var string
          *
-         * @ORM\Column(name="github", type="string", length=255, nullable=true)
+         * @ORM\Column(name="github", type="string", length=191, nullable=true)
          */
     private $github;
 
@@ -188,7 +188,7 @@ class Author
          * @return Author
          */
     public function setShortBio($shortBio) {
-        $this->shortBio = shortBio;
+        $this->shortBio = $shortBio;
         return $this;
     }
    
