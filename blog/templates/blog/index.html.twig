@@ -4,7 +4,7 @@
 
 {% block body %}
     {% if blogposts %}
-        <table class="table table-striped">
+        <table id="blogposts" class="table table-striped">
             <thead>
             <tr>
                 <th>Blog Title</th>
@@ -14,9 +14,9 @@
             <tbody> 
                 {% for blog in blogposts %}
                     <tr>
-                        <td>{{ blog.title }}</td>
+                        <td><a href="/blog/{{ blog.id }}">{{ blog.title }}</a></td>
                         <td>
-                            <a href="/blog/{{blog.id}}" class="btn btn-dark">Show</a>
+                            <a href="#" class="btn btn-danger delete-blog" data-id="{{ blog.id }}">X</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -26,3 +26,7 @@
         <p>No blogposts to display</p>
     {% endif %}
 {% endblock %}
+
+ {% block javascripts %}
+    <script src="/js/main.js"></script>
+ {% endblock %}
