@@ -9,7 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class ArticleController extends Controller {
     /**
-     * @Route("/")
+     * @Route("/test")
      * @Method({"GET"})
      */
     public function index() {

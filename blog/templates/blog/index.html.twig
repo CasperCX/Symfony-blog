@@ -12,11 +12,11 @@
             </tr>
             </thead>
             <tbody> 
-                {% for post in blogposts %}
+                {% for blog in blogposts %}
                     <tr>
-                        <td>{{ post }}</td>
+                        <td>{{ blog.title }}</td>
                         <td>
-                            <a href="/post/1" class="btn btn-dark">Show</a>
+                            <a href="/blog/{{blog.id}}" class="btn btn-dark">Show</a>
                         </td>
                     </tr>
                 {% endfor %}
