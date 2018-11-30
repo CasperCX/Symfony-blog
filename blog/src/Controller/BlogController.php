@@ -53,7 +53,7 @@ class BlogController extends AbstractController
      * @Method({"GET", "POST"})
      */
     public function new(Request $request) {
-        $blogpost = new BlogPost();
+        
     
         //TODO
         //Check if author logged in else redirect
@@ -62,8 +62,10 @@ class BlogController extends AbstractController
 
         // $this->addFlash('error', 'Unable to create author, author already exists!');
 
-        // return $this->redirectToRoute('homepage');
+        // return $this->redirectToRoute('blog_list');
 
+        
+        $blogpost = new BlogPost();
         //Set the time of creation
         $blogpost->setCreatedAt(new \DateTime('Europe/Amsterdam'));
         $blogpost->setUpdatedAt(new \DateTime('Europe/Amsterdam'));
@@ -72,7 +74,6 @@ class BlogController extends AbstractController
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-            
             $this->entityManager->persist($blogpost);
             $this->entityManager->flush($blogpost);
     
@@ -114,45 +115,7 @@ class BlogController extends AbstractController
 
 
 
-    // /**
-    //  * @Route("/save", name="save")
-    //  * @Method({"GET"})
-    //  */
-    // public function save() {
-    //     $entityManager = $this->getDoctrine()->getManager();
-
-    //     $blogpost = new BlogPost();
-    //     $author = new Author();
-
-    //     $author->setName('Casper Groenenberg');
-    //     $author->setTitle('C Groenenberg');
-    //     $author->setUsername('Casper');
-    //     $author->setCompany("Github");
-    //     $author->setShortBio('bio here');
-    //     $author->setPhone('061234567');
-    //     $author->setFacebook('');
-    //     $author->setTwitter('');
-    //     $author->setGithub('');
-
-
-    //     $blogpost->setTitle('Blog number one3');
-    //     $blogpost->setSlug("test3");
-    //     $blogpost->setDescription("test3");
-    //     $blogpost->setBody("test3");
-    //     $blogpost->setAuthor($author);
-    //     $blogpost->setCreatedAt(new \DateTime('Europe/Amsterdam'));
-    //     $blogpost->setUpdatedAt(new \DateTime('Europe/Amsterdam'));
-
-    //     $entityManager->persist($author);
-    //     $entityManager->persist($blogpost);
-    //     $entityManager->flush();
-
-    //     return new Response('Saved an article');
-        
-    // }
-
-
-
+//Code snippet
   // try {
         //     $entityManager = $this->getEntityManager();
         //     $entityManager->remove($entity);

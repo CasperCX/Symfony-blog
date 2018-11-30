@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 use App\Form\AuthorFormType;
 
@@ -39,19 +40,27 @@ class AdminController extends AbstractController {
      * @Method({"GET", "POST"})
      */
     public function createAuthor(Request $request) {
-        // if ($this->authorRepository->findOneByUsername($this->getUser()->getUserName())) {
-        //     // Redirect to dashboard.
-        //     $this->addFlash('error', 'Unable to create author, author already exists!');
-    
-        //     return $this->redirectToRoute('blog_list');
-        // }
-    
         $author = new Author();
     
         $form = $this->createForm(AuthorFormType::class, $author);
         $form->handleRequest($request);
-    
+
+        //Check if user or username already exists in author table
+        if (($this->authorRepository->findOneByUsername($username = $form["username"]->getData()))
+                || ($this->authorRepository->findOneByUsername($name = $form["name"]->getData())))
+            {
+
+            $this->addFlash('error', 'Unable to create user, username OR name already exists!');
+            return $this->redirectToRoute('author_create');
+        }
+
+      
         if ($form->isSubmitted() && $form->isValid()) {
+            $session = $request->getSession();
+    
+            // set session username
+            $session->set('username', $form["username"]->getData());
+          
             $this->entityManager->persist($author);
             $this->entityManager->flush($author);
     
@@ -61,5 +70,19 @@ class AdminController extends AbstractController {
         return $this->render('admin/create_author.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+
+     /**
+     * @Route("/admin/logout", name="author_logout")
+     * @Method({"GET"})
+     */
+    public function logoutAuthor(Request $request) {
+        $session = $request->getSession();
+
+        // clear session username
+        $session->remove('username');
+
+        return $this->redirectToRoute('blog_list');
     }
 }

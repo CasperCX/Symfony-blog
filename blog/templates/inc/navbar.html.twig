@@ -1,22 +1,29 @@
 <nav class="navbar navbar-expand-sm navbar-dark bg-primary mb-3">
-<div class="container">
-  <a href="/" class="navbar-brand">Symfony Blog</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mobile-nav">
-    <span class="navbar-toggle-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="mobile-nav">
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <a href="/" class="nav-link">Home</a>
-      </li>
-      <li class="nav-item">
-        <a href="/blog/new" class="nav-link">New Blog Post</a>
-      </li>
-      <li class="nav-item">
-        <a href="/admin/create" class="nav-link">Login</a>
-      </li>
-    </ul>
+  <div class="container">
+    <a href="/" class="navbar-brand">Symfony Blog</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mobile-nav">
+      <span class="navbar-toggle-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mobile-nav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a href="/" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item">
+          <a href="/blog/new" class="nav-link">New Blog Post</a>
+        </li>
+        {% if app.session.get('username') %}
+          {% set username = app.session.get('username') %}
+            <li class="nav-item">
+              <span>Logged in as ({{ username }})</span>
+              <a href="/admin/logout" class="nav-link">Logout</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a href="/admin/create" class="nav-link">Login</a>
+            </li>
+          {% endif %}
+      </ul>
+    </div>
   </div>
-</div>
 </nav>
