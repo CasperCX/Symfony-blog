@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 use App\Form\BlogFormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -53,36 +54,41 @@ class BlogController extends AbstractController
      * @Method({"GET", "POST"})
      */
     public function new(Request $request) {
+        $session = $request->getSession();
+    
+        //Check if a user is in session
+        // get session username
+        $username = $session->get('username');
         
-    
-        //TODO
-        //Check if author logged in else redirect
-        //if logged in set the author as logged in auuthor
-        //$blogpost->setAuthor($author);
+        if ($username != "") {
+            $blogpost = new BlogPost();
 
-        // $this->addFlash('error', 'Unable to create author, author already exists!');
+            $author = $this->authorRepository->findOneBy(array('username' => $username));
+            $blogpost->setAuthor($author);
 
-        // return $this->redirectToRoute('blog_list');
+            //Set the time of creation
+            $blogpost->setCreatedAt(new \DateTime('Europe/Amsterdam'));
+            $blogpost->setUpdatedAt(new \DateTime('Europe/Amsterdam'));
 
+            $form = $this->createForm(BlogFormType::class, $blogpost);
+            $form->handleRequest($request);
+            
         
-        $blogpost = new BlogPost();
-        //Set the time of creation
-        $blogpost->setCreatedAt(new \DateTime('Europe/Amsterdam'));
-        $blogpost->setUpdatedAt(new \DateTime('Europe/Amsterdam'));
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->entityManager->persist($blogpost);
+                $this->entityManager->flush($blogpost);
+        
+                return $this->redirectToRoute('blog_list');
+            }
+        
+            return $this->render('blog/new.html.twig', [
+                'form' => $form->createView()
+            ]);
 
-        $form = $this->createForm(BlogFormType::class, $blogpost);
-        $form->handleRequest($request);
-    
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($blogpost);
-            $this->entityManager->flush($blogpost);
-    
-            return $this->redirectToRoute('blog_list');
+        } else {
+            $this->addFlash('error', 'You have to create an account in order to create a new blogpost!');
+            return $this->redirectToRoute('author_create');
         }
-    
-        return $this->render('blog/new.html.twig', [
-            'form' => $form->createView()
-        ]);
     }
 
 

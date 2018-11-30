@@ -15,7 +15,7 @@
         {% if app.session.get('username') %}
           {% set username = app.session.get('username') %}
             <li class="nav-item">
-              <span>Logged in as ({{ username }})</span>
+              <span class="badge badge-info">Logged in as ({{ username }})</span>
               <a href="/admin/logout" class="nav-link">Logout</a>
             </li>
           {% else %}
