@@ -16,7 +16,7 @@
                     <tr>
                         <td><a href="/blog/{{ blog.id }}">{{ blog.title }}</a></td>
                         <td>
-                            <a href="#" class="btn btn-danger delete-blog" data-id="{{ blog.id }}">X</a>
+                            <a href="/blog/delete/{{ blog.id }}" class="btn btn-danger delete-blog" data-id="{{ blog.id }}">X</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -28,5 +28,5 @@
 {% endblock %}
 
  {% block javascripts %}
-    <script src="/js/main.js"></script>
+
  {% endblock %}

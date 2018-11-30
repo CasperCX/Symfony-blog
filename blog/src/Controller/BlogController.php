@@ -113,11 +113,15 @@ class BlogController extends AbstractController
         $this->entityManager->remove($blog);
         $this->entityManager->flush($blog);
 
-        $response = new Response();
-        $response->send();
+        return $this->redirectToRoute('blog_list');
     }
 
 }
+
+
+
+
+
 
 
 
