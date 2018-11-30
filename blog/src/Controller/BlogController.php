@@ -8,25 +8,45 @@ use App\Entity\Author;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
+use App\Form\BlogFormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class BlogController extends AbstractController
 {
+
+    private $entityManager;
+
+    private $authorRepository;
+
+    private $blogPostRepository;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager) {
+        $this->entityManager = $entityManager;
+        $this->blogPostRepository = $entityManager->getRepository('App:BlogPost');
+        $this->authorRepository = $entityManager->getRepository('App:Author');
+    }
+
+
     /**
      * @Route("/", name="blog_list")
      * @Method({"GET"})
      */
     public function index() {
-      $blogposts = $this->getDoctrine()->getRepository(BlogPost::class)->findAll();
+      $blogposts = $this->blogPostRepository->findAll();
 
       return $this->render('blog/index.html.twig', array('blogposts' => $blogposts));
     }
+
 
     /**
      * @Route("/blog/new", name="blog_new")
@@ -34,36 +54,43 @@ class BlogController extends AbstractController
      */
     public function new(Request $request) {
         $blogpost = new BlogPost();
+    
+        //TODO
+        //Check if author logged in else redirect
+        //if logged in set the author as logged in auuthor
+        //$blogpost->setAuthor($author);
 
-        $form = $this->createFormBuilder($blogpost)
-        ->add('title', TextType::class, array('attr' => 
-            array('class' => 'form-control')))
-        ->add('body', TextareaType::class, array('required' => false, 'attr' =>
-            array('class' => 'form-control')))
-        ->add('save', SubmitType::class, array('label' => 'Create', 'attr' =>
-            array('class' => 'btn btn-primary mt-3')))
-        ->getForm();
+        // $this->addFlash('error', 'Unable to create author, author already exists!');
 
+        // return $this->redirectToRoute('homepage');
+
+        //Set the time of creation
+        $blogpost->setCreatedAt(new \DateTime('Europe/Amsterdam'));
+        $blogpost->setUpdatedAt(new \DateTime('Europe/Amsterdam'));
+
+        $form = $this->createForm(BlogFormType::class, $blogpost);
         $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()) {
-            $blogpost = $form->getData(); 
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($blogpost);
-            $entityManager->flush();
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            $this->entityManager->persist($blogpost);
+            $this->entityManager->flush($blogpost);
+    
             return $this->redirectToRoute('blog_list');
         }
-
-        return $this->render('blog/new.html.twig', array('form' => $form->createView() ));
+    
+        return $this->render('blog/new.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
+
 
     /**
      * @Route("/blog/{id}", name="blog_show")
      * @Method({"GET"})
      */
     public function show($id) {
-        $blog = $this->getDoctrine()->getRepository(BlogPost::class)->find($id);
+        $blog = $this->blogPostRepository->find($id);
 
         return $this->render('blog/show.html.twig', array('blog' => $blog));
     }
@@ -74,16 +101,14 @@ class BlogController extends AbstractController
      * @Method({"DELETE"})
      */
     public function delete($id) {
-        $blogpost = $this->getDoctrine()->getRepository(BlogPost::class)->find($id);
+        $blog = $this->blogPostRepository->find($id);
         
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($blogpost);
-        $entityManager->flush();
+        $this->entityManager->remove($blog);
+        $this->entityManager->flush($blog);
 
         $response = new Response();
         $response->send();
     }
-
 
 }
 
