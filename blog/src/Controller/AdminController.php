@@ -45,9 +45,9 @@ class AdminController extends AbstractController {
         $form = $this->createForm(AuthorFormType::class, $author);
         $form->handleRequest($request);
 
-        //Check if user or username already exists in author table
-        if (($this->authorRepository->findOneByUsername($username = $form["username"]->getData()))
-                || ($this->authorRepository->findOneByUsername($name = $form["name"]->getData())))
+        //Check if user and username already exists in author table
+        if (($this->authorRepository->findOneByUsername($form["username"]->getData()))
+                && ($this->authorRepository->findOneByUsername($form["name"]->getData())))
             {
 
             $this->addFlash('error', 'Unable to create user, username OR name already exists!');
